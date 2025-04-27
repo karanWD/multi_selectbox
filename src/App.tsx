@@ -1,35 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import SelectBox from '../components/selectbox/SelectBox.tsx';
+import { useState } from 'react';
+import './App.scss';
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
+  const handleSelectionChange = (newSelectedItems: string[]) => {
+    setSelectedItems(newSelectedItems);
+  };
+
+  const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app-wrapper">
+      <SelectBox
+        options={options}
+        selectedValues={selectedItems}
+        onChange={handleSelectionChange}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;

@@ -1,0 +1,12 @@
+:root {
+  --white: '#FFF';
+  --neutral_100: '#AAA';
+}
+.app-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  width: 100%;
+  background-color: #eee;
+}
