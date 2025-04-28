@@ -1,6 +1,15 @@
 :root {
-  --white: '#FFF';
-  --neutral_100: '#AAA';
+  --white: #fff;
+  --neutral_50: #f5f5f5;
+  --neutral_100: #ddd;
+  --neutral_400: #777;
+  --neutral_800: #444;
+  --blue_100: #f4f8ff;
+  --blue_main: #0c52b4;
+}
+* {
+  margin: 0;
+  padding: 0;
 }
 .app-wrapper {
   display: flex;
@@ -8,5 +17,5 @@
   justify-content: center;
   min-height: 100dvh;
   width: 100%;
-  background-color: #eee;
+  background-color: var(--neutral_50);
 }

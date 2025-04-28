@@ -1,109 +1,96 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import styles from './SelectBox.module.scss';
+import CheckIcon from '../../src/icons/CheckIcon.tsx';
+import ChevronDownIcon from '../../src/icons/ChevronDownIcon.tsx';
 
-interface MultiSelectProps {
+type SelectBoxProps = {
   options: string[];
-  selectedValues: string[];
-  onChange: (selected: string[]) => void;
-}
+  selected: string[];
+  onSelect: (value: string[]) => void;
+  label?: string;
+};
 
-const SelectBox: React.FC<MultiSelectProps> = ({ options, selectedValues, onChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const [filteredOptions, setFilteredOptions] = useState(options);
+const SelectBox: FC<SelectBoxProps> = ({ label = '', selected, options, onSelect }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const selectRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const [optionsList, setOptionsList] = useState<string[]>(options);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const inputValue = inputRef.current?.value;
+    if (e.key === 'Enter' && inputValue?.trim()) {
+      if (!optionsList.includes(inputValue.trim())) {
+        const newItem = inputValue.trim();
+        setOptionsList((prev) => [newItem, ...prev]);
+      }
+      if (inputRef.current) inputRef.current.value = '';
+    }
+  };
 
-  // Manage clicking outside to close the dropdown
+  const selectHandler = (value: string) => {
+    let tempList = [...selected];
+    const index = tempList.indexOf(value);
+    if (index > -1) {
+      tempList.splice(index, 1);
+    } else {
+      tempList = [...tempList, value];
+    }
+    onSelect(tempList);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+      if (!selectRef.current) return;
+      if (!selectRef.current.contains(event.target as Node)) {
+        setOpen(false);
       }
     };
-
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
+    document.addEventListener('click', handleClickOutside, true);
+    return () => document.removeEventListener('click', handleClickOutside, true);
   }, []);
 
-  // Handle input changes and filter options
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-    setFilteredOptions(
-      options.filter((option) => option.toLowerCase().includes(e.target.value.toLowerCase())),
-    );
-  };
-
-  // Handle adding a new option when Enter is pressed
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && inputValue.trim()) {
-      const newOption = inputValue.trim();
-      if (!options.includes(newOption) && !selectedValues.includes(newOption)) {
-        onChange([...selectedValues, newOption]);
-      }
-      setInputValue('');
-    }
-  };
-
-  // Toggle the dropdown visibility
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  // Handle selection of an option
-  const handleOptionClick = (option: string) => {
-    if (!selectedValues.includes(option)) {
-      onChange([...selectedValues, option]);
-    }
-  };
-
-  // Handle removing a selected option
-  const handleRemoveSelection = (option: string) => {
-    onChange(selectedValues.filter((value) => value !== option));
-  };
-
   return (
-    <div className={styles['container']} ref={selectRef}>
-      <div className={styles['input-container']} onClick={toggleDropdown}>
-        <div className={styles['selected-values']}>
-          {selectedValues.map((value) => (
-            <span key={value} className={styles['selected-item']}>
-              {value}
-              <button
-                className={styles['remove-item']}
-                onClick={() => handleRemoveSelection(value)}
-              >
-                ×
-              </button>
-            </span>
-          ))}
-        </div>
-        <input
-          type="text"
-          className={styles['input']}
-          placeholder="Type to add or select..."
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-        />
-      </div>
-
-      {isOpen && (
-        <div className={styles['dropdown']}>
-          {filteredOptions.length === 0 && inputValue && (
-            <div className="multi-select__new-option" onClick={() => handleOptionClick(inputValue)}>
-              Add "{inputValue}"
+    <div className={styles.selectBoxContainer} ref={selectRef}>
+      {label && <label className={styles.label}>{label}</label>}
+      <div className={styles.selectWrapper}>
+        <div className={styles.inputWrapper}>
+          {open ? (
+            <input
+              ref={inputRef}
+              className={styles.input}
+              type="text"
+              placeholder="Type & click Enter"
+              onKeyDown={handleKeyDown}
+            />
+          ) : (
+            <div className={styles.titlesWrapper} onClick={() => setOpen((prev) => !prev)}>
+              {selected.length === 0 && 'select from here'}
+              {selected.length > 2 ? (
+                selected.length + ' items selected'
+              ) : (
+                <div className={styles.titlesWrapper}>{selected.join(' , ')}</div>
+              )}
             </div>
           )}
-          {filteredOptions.map((option) => (
+        </div>
+        <div onClick={() => setOpen((prev) => !prev)} className={styles.iconWrapper}>
+          <ChevronDownIcon />
+        </div>
+      </div>
+
+      {open && (
+        <div className={styles.dropdown}>
+          {optionsList.map((option, index) => (
             <div
-              key={option}
-              className="multi-select__option"
-              onClick={() => handleOptionClick(option)}
+              key={'OPTION_ITEM_' + index}
+              className={`${styles.dropdownItem} ${selected.includes(option) ? styles.selected : ''}`}
+              onClick={() => selectHandler(option)}
             >
-              {option}
+              <span className={styles.optionText}>{option}</span>
+              {selected.includes(option) && (
+                <div className={styles.checkIcon}>
+                  <CheckIcon />
+                </div>
+              )}
             </div>
           ))}
         </div>

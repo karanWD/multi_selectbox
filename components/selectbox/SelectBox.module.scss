@@ -1,91 +1,101 @@
-.container {
-  position: relative;
-  display: inline-block;
+.selectBoxContainer {
   width: 300px;
-
-  .input-container {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 8px;
-    cursor: pointer;
-    background-color: #fff;
-
-    .selected-values {
-      display: flex;
-      flex-wrap: wrap;
-      margin-right: 8px;
-    }
-
-    .selected-item {
-      background-color: #f1f1f1;
-      padding: 4px 8px;
-      margin: 2px;
-      border-radius: 12px;
-      display: inline-flex;
-      align-items: center;
-      font-size: 14px;
-      color: #333;
-
-      .remove-item {
-        background: none;
-        border: none;
-        font-size: 12px;
-        color: #888;
-        cursor: pointer;
-        margin-left: 4px;
-
-        &:hover {
-          color: #d9534f;
-        }
-      }
-    }
-
-    .input {
-      border: none;
-      outline: none;
-      flex-grow: 1;
-      font-size: 14px;
-      padding: 4px;
-      background-color: transparent;
-
-      &::placeholder {
-        color: #aaa;
-      }
-    }
-  }
-
-  .dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
+  position: relative;
+}
+.label {
+  display: block;
+  margin-bottom: 8px;
+}
+.selectWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 45px;
+  background-color: var(--white);
+  padding: 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 1px solid var(--neutral_100);
+}
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  flex: 1 1;
+  height: 100%;
+  .input {
     width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    border-radius: 4px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-
-    .multi-select__option,
-    .multi-select__new-option {
-      padding: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      color: #333;
-      background-color: #fff;
-      transition: background-color 0.3s;
-
-      &:hover {
-        background-color: #f1f1f1;
-      }
-    }
-
-    .multi-select__new-option {
-      font-style: italic;
-      color: #888;
-    }
+    height: 100%;
+    border: none;
   }
+}
+
+.titlesWrapper {
+  display: flex;
+  align-items: center;
+  flex: 1 1;
+  user-select: none;
+  gap: 8px;
+  height: 100%;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 24px;
+  padding: 8px;
+  color: var(--neutral_400);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: calc(100% - 24px);
+  background-color: var(--white);
+  padding: 12px;
+  border-radius: 12px;
+  max-height: 200px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid var(--neutral_100);
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--neutral_100);
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--neutral_400);
+  }
+}
+.dropdownItem {
+  padding: 12px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  &:hover {
+    background-color: var(--blue_100);
+  }
+}
+.checkIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--blue_main);
+}
+.selected {
+  color: var(--blue_main);
+  background-color: var(--blue_100);
 }
